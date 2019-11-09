@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+cd "$(dirname "$0")"
+cd ..
+
+cargo +nightly test
+cargo build --release --bin main

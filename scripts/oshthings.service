@@ -1,0 +1,16 @@
+[Unit]
+Description=oshthings web app service
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=5
+User=webservice
+Group=webservice
+WorkingDirectory={service_base_path}
+ExecStart={service_base_path}/main
+StandardOutput=file:/var/log/oshthings.log
+StandardError=file:/var/log/oshthings.log
+
+[Install]
+WantedBy=multi-user.target

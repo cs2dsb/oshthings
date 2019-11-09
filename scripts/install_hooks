@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ $EUID -eq 0 ]]; then
+   echo "This script must be run as your dev user"
+   exit 1
+fi
+
+cd "$(dirname "$0")"
+
+HOOK_SRC="../../scripts/hooks/pre-commit"
+HOOK_DST="../.git/hooks/pre-commit"
+
+rm -f $HOOK_DST
+ln -s $HOOK_SRC $HOOK_DST

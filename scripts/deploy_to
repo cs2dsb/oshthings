@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -e
+
+DEST="$1"
+if ! [[ -d $DEST ]]; then 
+    echo "First arg is expected to be a path to copy files to"
+    exit 1
+fi
+
+cd "$(dirname "$0")"
+
+PROFILE=debug
+
+if [[ "$2" == "release" ]]; then
+    PROFILE=release
+fi
+
+check_file() {
+    if ! [[ -f "$1" ]]; then 
+        echo "Build is expected to have been run before this script is run."
+        echo "\"$1\" is missing"
+
+        exit 1
+    fi
+}
+
+rsync_em() {
+    rsync -avh $1 $2
+}
+
+copy_file() {
+    check_file $1
+    rsync_em $1 $2
+}
+
+cd ..
+
+
+mkdir -p $DEST/static
+copy_file target/$PROFILE/main $DEST/
+rsync_em static/ $DEST/static/

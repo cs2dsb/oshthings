@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -e
+
+tail -f -n 100 /var/log/oshthings.log

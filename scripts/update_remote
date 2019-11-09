@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -e
+
+HOST=cf
+#This assumes create_service has been run on the remote at least once
+./build_release
+rsync -avh --rsh=ssh ../target/release/main $HOST:~/oshthings_deploy/
+rsync -avh --rsh=ssh ../static/ $HOST:~/oshthings_deploy/static/
+ssh -t $HOST "cd ~/oshthings_deploy/ \
+        && sudo rsync -avh ./* /opt/oshthings \
+        && sudo chown -R webservice:webservice /opt/oshthings \
+        && sudo service oshthings restart"

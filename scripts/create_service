@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -e
+
+cd "$(dirname "$0")"
+
+SERVICE_NAME=oshthings
+SERVICE_DIR="/opt/$SERVICE_NAME"
+mkdir -p ~/${SERVICE_NAME}_deploy/
+id -u webservice &>/dev/null 2>&1 || sudo useradd -r webservice
+
+rm -f tmp.service
+cp $SERVICE_NAME.service tmp.service
+sed -i "s+{service_base_path}+${SERVICE_DIR}+g" tmp.service
+
+sudo cp tmp.service /lib/systemd/system/$SERVICE_NAME.service
+rm -f tmp.service
+
+sudo mkdir -p "$SERVICE_DIR"
+sudo ./deploy_to "$SERVICE_DIR" release
+
+sudo chown -R webservice:webservice "$SERVICE_DIR"
+
+sudo systemctl daemon-reload
+sudo systemctl enable $SERVICE_NAME

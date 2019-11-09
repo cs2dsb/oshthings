@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ $EUID -eq 0 ]]; then
+    echo "This script must be run as your dev user"
+    exit 1
+fi
+
+cd "$(dirname "$0")"
+
+
+check_dep() {
+        if ! hash $1 >/dev/null 1>&2; then
+                echo "Missing dep $1."
+                echo "$2"
+                exit 1
+        fi
+}
+
+hash_install_dep() {
+        if ! hash $1 >/dev/null 2>&1; then
+                echo "Installing $1"
+                sudo env "PATH=$PATH" $2
+        fi
+}
+
+install_dep() {
+        if ! $1 >/dev/null 2>&1; then
+                echo "Installing $1"
+                sudo env "PATH=$PATH" $2
+        fi
+}
+
+install_lib() {
+        if ! dpkg -s $1 >/dev/null 2>&1; then
+                sudo env "PATH=$PATH" $2
+        fi
+}
+
+
+
+#DIESEL_BASE_DIR="../backend"
+check_dep "rustup" "http://rustup.rs"
+#check_dep "yarn" "https://yarnpkg.com/en/docs/install#debian-stable"
+#hash_install_dep "g++" "apt install -y g++"
+#hash_install_dep "gcc" "apt install -y gcc"
+#hash_install_dep "make" "apt install -y make"
+#hash_install_dep "sqlite3" "apt install -y libsqlite3-dev"
+install_dep "cargo watch --help" "cargo install cargo-watch"
+install_dep "cargo +nightly -V" "rustup toolchain install nightly"
+#hash_install_dep "diesel" "cargo install diesel_cli --no-default-features --features postgres"
+hash_install_dep "rsync" "apt install -y rsync"
+#install_lib "libpq-dev" "apt install -y libpq-dev"
+
+#cd $DIESEL_BASE_DIR
+#diesel setup
