@@ -1,0 +1,10 @@
+[package]
+name = "oshthings"
+version = "0.1.0"
+authors = ["cs2dsb <cs2dsb@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+log = "0.4.8"
+failure = "0.1.6"
+env_logger = "0.7.1"
